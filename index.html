@@ -943,23 +943,6 @@
             box-shadow: 0 5px 15px var(--glow-red);
         }
 
-        /* Social Links Underline Effect */
-        .social-links-mini a::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background: var(--primary-red);
-            transition: width 0.3s;
-        }
-
-        .social-links-mini a:hover::after {
-            width: 70%;
-        }
-
         /* Social Media Icons Custom Colors */
         .social-links-mini a:nth-child(1):hover { background: #1877F2; } /* Facebook */
         .social-links-mini a:nth-child(2):hover { background: #E4405F; } /* Instagram */
@@ -1191,30 +1174,12 @@
             text-decoration: none;
             transition: all 0.3s;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
         }
 
         .social-link:hover {
             background: var(--primary-red);
             transform: translateY(-3px);
             box-shadow: 0 5px 15px var(--glow-red);
-        }
-
-        /* Social link underline effect */
-        .social-link::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background: var(--primary-red);
-            transition: width 0.3s;
-        }
-
-        .social-link:hover::after {
-            width: 60%;
         }
 
         /* Custom colors for social links in footer */
@@ -1879,10 +1844,10 @@
                                 <img src="brm/collage.webp" alt="The Kota T-Shirt 2">
                             </div>
                             <div class="collage-item item3">
-                                <img src="brm/1.webp" alt="The Kota Hoodie">
+                                <img src="brm/2.webp" alt="The Kota Hoodie">
                             </div>
                             <div class="collage-item item4">
-                                <img src="brm/2.webp" alt="The Kota Cap">
+                                <img src="brm/1.webp" alt="The Kota Cap">
                             </div>
                         </div>
                     </div>
@@ -2269,7 +2234,7 @@
             }, 1500); // Simulate network delay
         });
 
-        // Facebook Group Live Follower Count System
+        // Facebook Group Live Follower Count System - FIXED VERSION
         class FacebookGroupCounter {
             constructor() {
                 this.currentCount = 158134; // Starting count
@@ -2295,18 +2260,14 @@
             }
             
             formatNumber(num) {
-                if (num >= 1000000) {
-                    return (num / 1000000).toFixed(1) + 'M';
-                } else if (num >= 1000) {
-                    return (num / 1000).toFixed(1) + 'K';
-                }
+                // Just show comma separated number without K/M
                 return num.toLocaleString();
             }
             
             updateDisplay() {
                 const formattedCount = this.formatNumber(this.currentCount);
                 this.countElement.textContent = formattedCount;
-                this.footerCountElement.textContent = formattedCount.replace('K', '').replace('M', '');
+                this.footerCountElement.textContent = formattedCount;
                 
                 // Add animation
                 this.countElement.classList.add('counting-up');
@@ -2320,7 +2281,7 @@
                 // More growth during peak hours (10AM-10PM)
                 const now = new Date();
                 const hour = now.getHours();
-                let baseIncrement = 1;
+                let baseIncrement = 0;
                 
                 if (hour >= 10 && hour <= 22) {
                     // Peak hours: higher growth
@@ -2411,15 +2372,15 @@
             }
             
             startLiveUpdates() {
-                // Update every 30 seconds (simulated live updates)
+                // Update every 60 seconds (simulated live updates)
                 this.updateInterval = setInterval(() => {
                     this.simulateUpdate();
-                }, 30000);
+                }, 60000); // Changed to 60 seconds
                 
-                // Initial update after 10 seconds
+                // Initial update after 5 seconds
                 setTimeout(() => {
                     this.simulateUpdate();
-                }, 10000);
+                }, 5000);
                 
                 // Update timestamp every minute
                 setInterval(() => {
@@ -2432,16 +2393,18 @@
                 this.countElement.style.cursor = 'pointer';
                 this.countElement.title = 'Click to refresh count';
                 
-                this.countElement.addEventListener('click', () => {
+                this.countElement.addEventListener('click', (e) => {
+                    e.stopPropagation();
                     this.forceUpdate();
                 });
                 
                 // Also make the box refresh on hover refresh icon
                 const fbGroupBox = document.querySelector('.fb-group-box');
-                fbGroupBox.style.cursor = 'pointer';
                 
                 fbGroupBox.addEventListener('click', (e) => {
+                    // Only refresh if not clicking the join link
                     if (!e.target.closest('.fb-group-link')) {
+                        e.stopPropagation();
                         this.forceUpdate();
                     }
                 });
@@ -2449,8 +2412,8 @@
             
             forceUpdate() {
                 // Add refresh animation
-                this.countElement.style.transform = 'rotate(360deg)';
-                this.countElement.style.transition = 'transform 0.5s ease';
+                this.countElement.style.transform = 'scale(0.9)';
+                this.countElement.style.transition = 'transform 0.3s ease';
                 
                 // Simulate API call delay
                 setTimeout(() => {
@@ -2460,12 +2423,12 @@
                     this.updateDisplay();
                     this.updateTimestamp();
                     
-                    // Reset rotation
-                    this.countElement.style.transform = 'rotate(0deg)';
+                    // Reset scale
+                    this.countElement.style.transform = 'scale(1)';
                     
                     // Show notification
                     this.simulateNewMemberNotification();
-                }, 500);
+                }, 300);
             }
             
             toggleLiveStatus() {
